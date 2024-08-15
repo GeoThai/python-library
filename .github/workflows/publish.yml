@@ -45,7 +45,7 @@ jobs:
       - uses: actions/download-artifact@v4.1.8
         name: 📥 Download artifact
         with:
-          name: release-dists
+          name: release
           path: dist/
       - uses: pypa/gh-action-pypi-publish@v1.9.0
         name: 🚀 Publish package
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/download-artifact@v4.1.8
         name: 📥 Download artifact
         with:
-          name: release-dists
+          name: release
           path: dist/
       - uses: sigstore/gh-action-sigstore-python@v3.0.0
         name: 🔑 Sign artifact
