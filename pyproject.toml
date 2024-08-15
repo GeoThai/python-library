@@ -16,3 +16,6 @@ requires-python = ">=3.9"
 
 [project.urls]
 "Homepage" = "https://github.com/GeoThai/python-library"
+
+[tool.setuptools]
+packages = ["geothai"]
