@@ -1,0 +1,18 @@
+[project]
+name = "geothai"
+version = "0.1.0"
+description = "An python package that allows to access detailed geographic data on Thailand, including provinces, districts, and subdistricts. 🌟"
+authors = [
+    {name = "GeoThai Team", email = "yyupsk@proton.me"}
+]
+readme = "README.md"
+license = {text = "MIT License"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.9"
+
+[project.urls]
+"Homepage" = "https://github.com/GeoThai/python-library"
