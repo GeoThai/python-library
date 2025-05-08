@@ -1,7 +1,7 @@
 [project]
 name = "geothai"
-version = "0.1.0"
-description = "An python package that allows to access detailed geographic data on Thailand, including provinces, districts, and subdistricts. 🌟"
+version = "2.0.0"
+description = "An python package that allows to access detailed geographic data on Thailand, including provinces, districts, subdistricts and postal codes. 🌟"
 authors = [{ name = "GeoThai Team", email = "contact@fasu.dev" }]
 readme = "README.md"
 license = { text = "MIT License" }
@@ -16,4 +16,10 @@ requires-python = ">=3.9"
 "Homepage" = "https://github.com/GeoThai/python-library"
 
 [tool.setuptools]
-packages = ["geothai", "geothai.data", "geothai.services", "geothai.utils"]
+packages = [
+    "geothai",
+    "geothai.data",
+    "geothai.services",
+    "geothai.types",
+    "geothai.utils",
+]
