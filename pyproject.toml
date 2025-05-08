@@ -2,11 +2,9 @@
 name = "geothai"
 version = "0.1.0"
 description = "An python package that allows to access detailed geographic data on Thailand, including provinces, districts, and subdistricts. 🌟"
-authors = [
-    {name = "GeoThai Team", email = "yyupsk@proton.me"}
-]
+authors = [{ name = "GeoThai Team", email = "contact@fasu.dev" }]
 readme = "README.md"
-license = {text = "MIT License"}
+license = { text = "MIT License" }
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

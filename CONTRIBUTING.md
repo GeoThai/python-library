@@ -8,39 +8,39 @@ Thank you for your interest in contributing to the **GeoThai** project! 🌟 We 
 
 2. **Clone Your Fork**: Clone the repository to your local machine:
 
-    ```bash
-    git clone https://github.com/your-username/python-library.git
-    ```
+   ```bash
+   git clone https://github.com/your-username/python-library.git
+   ```
 
 3. **Install Dependencies**: Navigate to the project directory and install the necessary dependencies:
 
-    ```bash
-    cd python-library
-    pip install -r requirements.txt
-    ```
+   ```bash
+   cd python-library
+   pip install -r requirements.txt
+   ```
 
 4. **Create a Branch**: Create a new branch for your changes:
-    ```bash
-    git checkout -b my-feature-branch
-    ```
+   ```bash
+   git checkout -b my-feature-branch
+   ```
 
 ## Making Changes
 
 1. **Write Clear and Descriptive Commit Messages**: When making changes, ensure your commit messages are descriptive and follow the conventional format:
 
-    - `fix: description of the fix`
-    - `feat: description of the new feature`
-    - `docs: updates to documentation`
-    - `style: formatting changes`
-    - `refactor: code refactoring`
+   - `fix: description of the fix`
+   - `feat: description of the new feature`
+   - `docs: updates to documentation`
+   - `style: formatting changes`
+   - `refactor: code refactoring`
 
 2. **Add Tests**: If you are adding new features or fixing bugs, please add relevant tests to ensure the quality and stability of the code. Place tests in the `test` directory and follow the existing testing practices.
 
 3. **Run Tests**: Before submitting your changes, make sure all tests pass:
 
-    ```bash
-    pytest
-    ```
+   ```bash
+   pytest
+   ```
 
 4. **Update Documentation**: If your changes impact the usage or functionality of the package, update the `README.md` and any relevant documentation.
 
@@ -48,9 +48,9 @@ Thank you for your interest in contributing to the **GeoThai** project! 🌟 We 
 
 1. **Push Your Changes**: Push your changes to your forked repository:
 
-    ```bash
-    git push origin my-feature-branch
-    ```
+   ```bash
+   git push origin my-feature-branch
+   ```
 
 2. **Create a Pull Request**: Go to the [GeoThai python library repository](https://github.com/GeoThai/python-library) and create a pull request (PR) from your branch. Provide a clear description of the changes and reference any related issues.
 
@@ -62,11 +62,11 @@ By participating in this project, you agree to abide by our [Code of Conduct](CO
 
 ## Additional Resources
 
--   [GitHub Docs - Creating a Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)
--   [PyPi Documentation - Packaging Python Projects](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
+- [GitHub Docs - Creating a Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)
+- [PyPi Documentation - Packaging Python Projects](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
 
 ## Contact
 
-If you have any questions or need further assistance, please contact us at [pyyupsk@proton.me](mailto:pyyupsk@proton.me).
+If you have any questions or need further assistance, please contact us at [contact@fasu.dev](mailto:contact@fasu.dev).
 
 Thank you for contributing to the **GeoThai** project! Your efforts help us make the package better for everyone. 🙌
