@@ -1,36 +1,25 @@
 import json
-from typing import List, Optional, Dict
-from typing import TypedDict
+from typing import List, Optional
 
 from geothai.utils.criteria_matcher import match_criteria
+from geothai.types.district_type import District, DistrictIndex, Districts
 
 
-class District(TypedDict):
-    id: int
-    province_id: int
-    district_id: int
-    district_name_en: str
-    district_name_th: str
-    postal_code: int
+with open('geothai/data/districts.json', "r", encoding="utf-8") as f:
+    _districts_data: Districts = json.load(f)
 
 
-with open('geothai/data/districts.json', 'r', encoding='utf-8') as file:
-    districts_data = json.load(file)
-
-districts: Dict[int, District] = {district['district_id']:
-                                  district
-                                  for district in districts_data}
+def get_all_districts() -> Districts:
+    """Return a list of all district records."""
+    return list(_districts_data.values())
 
 
-def get_all_districts() -> List[District]:
-    return list(districts.values())
+def get_district_by_code(code: DistrictIndex) -> Optional[District]:
+    """Return a single district by its code, or None if not found."""
+    return _districts_data.get(code)
 
 
-def get_district_by_id(district_id: int) -> Optional[District]:
-    return districts.get(district_id)
-
-
-def get_districts_by_criterion(criterion: Dict) -> List[District]:
-    return [district
-            for district in districts.values()
-            if match_criteria(district, criterion)]
+def get_districts_by_criterion(criterion: District) -> List[District]:
+    """Return a list of districts that match the given criterion."""
+    return [d for d in
+            _districts_data.values() if match_criteria(d, criterion)]

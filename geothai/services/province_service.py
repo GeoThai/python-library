@@ -1,34 +1,25 @@
 import json
-from typing import List, Optional, Dict
-from typing import TypedDict
+from typing import List, Optional
 
 from geothai.utils.criteria_matcher import match_criteria
+from geothai.types.province_type import Province, ProvinceIndex, Provinces
 
 
-class Province(TypedDict):
-    id: int
-    province_id: int
-    province_name_en: str
-    province_name_th: str
+with open('geothai/data/provinces.json', "r", encoding="utf-8") as f:
+    _provinces_data: Provinces = json.load(f)
 
 
-with open('geothai/data/provinces.json', 'r', encoding='utf-8') as file:
-    provinces_data = json.load(file)
-
-provinces: Dict[int, Province] = {province['province_id']:
-                                  province
-                                  for province in provinces_data}
+def get_all_provinces() -> Provinces:
+    """Return a list of all province records."""
+    return list(_provinces_data.values())
 
 
-def get_all_provinces() -> List[Province]:
-    return list(provinces.values())
+def get_province_by_code(code: ProvinceIndex) -> Optional[Province]:
+    """Return a single province by its code, or None if not found."""
+    return _provinces_data.get(code)
 
 
-def get_province_by_id(province_id: int) -> Optional[Province]:
-    return provinces.get(province_id)
-
-
-def get_provinces_by_criterion(criterion: Dict) -> List[Province]:
-    return [province
-            for province in provinces.values()
-            if match_criteria(province, criterion)]
+def get_provinces_by_criterion(criterion: Province) -> List[Province]:
+    """Return a list of provinces that match the given criterion."""
+    return [d for d in
+            _provinces_data.values() if match_criteria(d, criterion)]
