@@ -1,5 +1,8 @@
 # GeoThai Python Library
 
+[![PyPI - Version](https://img.shields.io/pypi/v/geothai)](https://pypi.org/project/geothai/)
+[![PyPI Downloads](https://static.pepy.tech/badge/geothai)](https://pepy.tech/projects/geothai)
+
 Welcome to the **GeoThai Python Library**! This library provides a simple and efficient way to access detailed geographic data for Thailand, including provinces, districts, and subdistricts.
 
 ## 🌏 Overview
