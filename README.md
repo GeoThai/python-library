@@ -25,14 +25,9 @@ pip install geothai
 ```python
 from geothai import (
     get_all_provinces,
-    get_province_by_id,
+    get_province_by_code,
     get_provinces_by_criterion,
-    get_all_districts,
-    get_district_by_id,
-    get_districts_by_criterion,
-    get_all_subdistricts,
-    get_subdistrict_by_id,
-    get_subdistricts_by_criterion
+    Province
 )
 ```
 
@@ -46,23 +41,24 @@ print(provinces)
 ### Getting a Province by ID
 
 ```python
-province = get_province_by_id(10)  # Replace 10 with the desired province_id
+province = get_province_by_code(10)  # Replace 10 with the desired province_id
 print(province)
 ```
 
 ### Filtering Provinces by Criteria
 
 ```python
-criteria = {"province_name_th": "กรุงเทพมหานคร"}
+criteria: Province = {"name_th": "กรุงเทพมหานคร"}
 matching_provinces = get_provinces_by_criterion(criteria)
 print(matching_provinces)
 ```
 
-### Similarly, You Can Access Districts and Subdistricts
+### Similarly, You Can Access Districts, Subdistricts and Postal Codes
 
 ```python
 districts = get_all_districts()
 subdistricts = get_all_subdistricts()
+postal_codes = get_all_postal_codes()
 ```
 
 ## 📂 Project Structure
@@ -71,6 +67,7 @@ The project is structured as follows:
 
 - **`geothai/data/`**: Contains the data files for provinces, districts, and subdistricts.
 - **`geothai/services/`**: Contains the main services for accessing province, district, and subdistrict data.
+- **`geothai/types/`**: Includes type definitions for provinces, districts, subdistricts, and postal codes.
 - **`geothai/utils/`**: Includes utility functions like criteria matching for filtering data.
 
 ## 🛠 Development
