@@ -1,3 +1,6 @@
+import json
+
+
 from .services.province_service import (
     get_all_provinces,
     get_province_by_code,
@@ -29,6 +32,10 @@ from .services.postal_code_service import (
     PostalCodeIndex,
     PostalCodes
 )
+from .types.metadata_type import Metadata
+
+with open('geothai/data/metadata.json', "r", encoding="utf-8") as f:
+    metadata: Metadata = json.load(f)
 
 __all__ = [
     'get_all_provinces',
