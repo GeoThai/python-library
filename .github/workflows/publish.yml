@@ -1,5 +1,15 @@
 name: 🚀 Publish Release
-on: push
+on:
+  workflow_run:
+    workflows: ["⚙️ Test"]
+    branches:
+      - main
+    types:
+      - completed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
