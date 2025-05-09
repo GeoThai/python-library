@@ -105,4 +105,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## 🙋‍♂️ Contact
 
-If you have any questions, issues, or suggestions, feel free to reach out at [contact@fasu.dev](mailto:contact@fasu.dev).
+If you have any questions, issues, or suggestions, feel free to reach out at [geothai@fasu.dev](mailto:geothai@fasu.dev).

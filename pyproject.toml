@@ -2,7 +2,7 @@
 name = "geothai"
 version = "2.0.0"
 description = "An python package that allows to access detailed geographic data on Thailand, including provinces, districts, subdistricts and postal codes. 🌟"
-authors = [{ name = "GeoThai Team", email = "contact@fasu.dev" }]
+authors = [{ name = "GeoThai Team", email = "geothai@fasu.dev" }]
 readme = "README.md"
 license = { text = "MIT License" }
 classifiers = [
