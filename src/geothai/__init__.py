@@ -88,6 +88,11 @@ def _subdistricts_by_district() -> dict[str, tuple[Subdistrict, ...]]:
     return {k: tuple(v) for k, v in grouped.items()}
 
 
+@cache
+def _subdistrict_by_code() -> dict[str, Subdistrict]:
+    return {s.code: s for s in _subdistricts()}
+
+
 def provinces() -> list[Province]:
     """Lists every province, sorted by code.
 
@@ -165,3 +170,19 @@ def subdistricts(district_code: str) -> list[Subdistrict]:
         ['Ko Pha-ngan', 'Ban Tai', 'Ko Tao']
     """
     return list(_subdistricts_by_district().get(district_code, ()))
+
+
+def subdistrict(code: str) -> Subdistrict | None:
+    """Finds a subdistrict by its code.
+
+    Args:
+        code: Six-digit DOPA subdistrict code, such as ``"840503"``.
+
+    Returns:
+        The subdistrict, or ``None`` if no subdistrict has this code.
+
+    Example:
+        >>> subdistrict("840503").postal_codes
+        ('84360',)
+    """
+    return _subdistrict_by_code().get(code)

@@ -6,6 +6,7 @@ from geothai import (
     districts,
     province,
     provinces,
+    subdistrict,
     subdistricts,
 )
 
@@ -65,3 +66,14 @@ def test_subdistricts_lists_the_subdistricts_of_a_district() -> None:
 def test_every_district_has_subdistricts_7436_in_all() -> None:
     every = [s for p in provinces() for d in districts(p.code) for s in subdistricts(d.code)]
     assert len(every) == 7436
+
+
+def test_subdistrict_finds_one_by_code() -> None:
+    found = subdistrict("840503")
+    assert found is not None
+    assert found.name_en == "Ko Tao"
+    hua_mak = subdistrict("100608")
+    assert hua_mak is not None
+    assert hua_mak.postal_codes == ("10240", "10250")
+    assert subdistrict("8405") is None
+    assert subdistrict("999999") is None
