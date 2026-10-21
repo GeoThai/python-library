@@ -5,7 +5,14 @@ description = "Every province, district, subdistrict and postal code of Thailand
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
-keywords = ["thailand", "provinces", "districts", "subdistricts", "postal-code", "address"]
+keywords = [
+    "thailand",
+    "provinces",
+    "districts",
+    "subdistricts",
+    "postal-code",
+    "address",
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -14,9 +21,7 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Typing :: Typed",
 ]
-authors = [
-    { name = "Pongsakorn Thipayanate", email = "contact@fasu.dev" }
-]
+authors = [{ name = "Pongsakorn Thipayanate" }]
 requires-python = ">=3.11"
 dependencies = []
 
@@ -30,11 +35,7 @@ requires = ["uv_build>=0.13.4,<0.14.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
-dev = [
-    "pyright==1.1.414",
-    "pytest==9.1.1",
-    "ruff==0.17.1",
-]
+dev = ["pyright==1.1.414", "pytest==9.1.1", "ruff==0.17.1"]
 
 [tool.ruff]
 line-length = 100
@@ -42,7 +43,21 @@ target-version = "py311"
 extend-exclude = ["src/geothai/_schema.py"]
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "I", "B", "UP", "SIM", "C4", "PT", "N", "RUF", "D", "ANN"]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "UP",
+    "SIM",
+    "C4",
+    "PT",
+    "N",
+    "RUF",
+    "D",
+    "ANN",
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
