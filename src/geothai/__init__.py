@@ -4,6 +4,9 @@ import json
 from dataclasses import dataclass
 from functools import cache
 from importlib.resources import files
+from typing import Literal
+
+from geothai._normalize import normalize
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,6 +47,14 @@ class Address:
     province: Province
     district: District
     subdistrict: Subdistrict
+
+
+@dataclass(frozen=True, slots=True)
+class SearchResult:
+    """One match from ``search()``. Check ``level`` to know which kind of area ``area`` is."""
+
+    level: Literal["province", "district", "subdistrict"]
+    area: Province | District | Subdistrict
 
 
 def _rows(name: str) -> list[list[str]]:
@@ -109,6 +120,16 @@ def _subdistricts_by_postal() -> dict[str, tuple[Subdistrict, ...]]:
         for code in s.postal_codes:
             grouped.setdefault(code, []).append(s)
     return {k: tuple(v) for k, v in grouped.items()}
+
+
+@cache
+def _search_index() -> tuple[tuple[SearchResult, tuple[str, str]], ...]:
+    results = [
+        *(SearchResult("province", p) for p in _provinces()),
+        *(SearchResult("district", d) for d in _districts()),
+        *(SearchResult("subdistrict", s) for s in _subdistricts()),
+    ]
+    return tuple((r, (normalize(r.area.name_th), normalize(r.area.name_en))) for r in results)
 
 
 def provinces() -> list[Province]:
@@ -244,3 +265,33 @@ def by_postal_code(postal_code: str) -> list[Subdistrict]:
         ['Ko Pha-ngan', 'Ban Tai']
     """
     return list(_subdistricts_by_postal().get(postal_code, ()))
+
+
+def search(query: str, *, limit: int = 10) -> list[SearchResult]:
+    """Finds provinces, districts and subdistricts by Thai or English name.
+
+    Case, spaces, hyphens and a leading word such as "อำเภอ" do not matter. Names that start
+    with the query come first, then provinces, districts and subdistricts.
+
+    Args:
+        query: Part of a name, such as ``"พะงัน"`` or ``"phangan"``.
+        limit: Most results to return.
+
+    Returns:
+        The matches, empty for an empty query.
+
+    Example:
+        >>> [f"{r.level} {r.area.name_th}" for r in search("phangan")]
+        ['district เกาะพะงัน', 'subdistrict เกาะพะงัน']
+    """
+    q = normalize(query)
+    if not q:
+        return []
+    starts: list[SearchResult] = []
+    contains: list[SearchResult] = []
+    for result, keys in _search_index():
+        if any(k.startswith(q) for k in keys):
+            starts.append(result)
+        elif any(q in k for k in keys):
+            contains.append(result)
+    return [*starts, *contains][:limit]

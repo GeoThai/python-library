@@ -1,3 +1,5 @@
+import pytest
+
 from geothai import (
     District,
     Province,
@@ -8,6 +10,7 @@ from geothai import (
     districts,
     province,
     provinces,
+    search,
     subdistrict,
     subdistricts,
 )
@@ -99,3 +102,26 @@ def test_by_postal_code_finds_every_subdistrict_that_uses_a_code() -> None:
     assert [s.code for s in by_postal_code("84280")] == ["840501", "840502"]
     assert "100608" in [s.code for s in by_postal_code("10250")]
     assert by_postal_code("00000") == []
+
+
+def found(query: str, limit: int = 10) -> list[str]:
+    return [f"{r.level} {r.area.code}" for r in search(query, limit=limit)]
+
+
+@pytest.mark.parametrize("query", ["พะงัน", "phangan", "Pha-ngan", "pha ngan"])
+def test_search_finds_a_name_in_thai_or_english(query: str) -> None:
+    assert found(query) == ["district 8405", "subdistrict 840501"]
+
+
+def test_search_puts_names_that_start_with_the_query_first_then_by_level() -> None:
+    assert found("สุราษฎร์", 3) == ["province 84", "district 8401", "subdistrict 700403"]
+
+
+def test_search_ignores_the_word_for_the_level() -> None:
+    assert found("อำเภอเกาะพะงัน") == found("เกาะพะงัน")
+    assert "district 1001" in found("เขตพระนคร")
+
+
+def test_search_returns_nothing_for_an_empty_query_and_respects_the_limit() -> None:
+    assert search("  ") == []
+    assert len(search("a", limit=5)) == 5
