@@ -15,15 +15,37 @@ class Province:
     name_en: str
 
 
+@dataclass(frozen=True, slots=True)
+class District:
+    """A district (amphoe or khet) of Thailand."""
+
+    code: str
+    name_th: str
+    name_en: str
+    province_code: str
+
+
+def _rows(name: str) -> list[list[str]]:
+    text = files("geothai").joinpath(f"_data/{name}.json").read_text(encoding="utf-8")
+    return json.loads(text)
+
+
 @cache
 def _provinces() -> tuple[Province, ...]:
-    text = files("geothai").joinpath("_data/provinces.json").read_text(encoding="utf-8")
-    return tuple(Province(code, name_th, name_en) for code, name_th, name_en in json.loads(text))
+    return tuple(Province(code, name_th, name_en) for code, name_th, name_en in _rows("provinces"))
 
 
 @cache
 def _province_by_code() -> dict[str, Province]:
     return {p.code: p for p in _provinces()}
+
+
+@cache
+def _districts_by_province() -> dict[str, tuple[District, ...]]:
+    grouped: dict[str, list[District]] = {}
+    for code, name_th, name_en in _rows("districts"):
+        grouped.setdefault(code[:2], []).append(District(code, name_th, name_en, code[:2]))
+    return {k: tuple(v) for k, v in grouped.items()}
 
 
 def provinces() -> list[Province]:
@@ -55,3 +77,19 @@ def province(code: str) -> Province | None:
         True
     """
     return _province_by_code().get(code)
+
+
+def districts(province_code: str) -> list[District]:
+    """Lists the districts of a province, sorted by code.
+
+    Args:
+        province_code: Two-digit code of the province.
+
+    Returns:
+        A new list, empty if the province code is unknown.
+
+    Example:
+        >>> len(districts("84"))
+        19
+    """
+    return list(_districts_by_province().get(province_code, ()))
