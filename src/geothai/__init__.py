@@ -8,6 +8,8 @@ from importlib.resources import files
 
 @dataclass(frozen=True, slots=True)
 class Province:
+    """A province of Thailand."""
+
     code: str
     name_th: str
     name_en: str
@@ -20,5 +22,13 @@ def _provinces() -> tuple[Province, ...]:
 
 
 def provinces() -> list[Province]:
-    """Every province, sorted by code."""
+    """Lists every province, sorted by code.
+
+    Returns:
+        A new list of all 77 provinces.
+
+    Example:
+        >>> provinces()[0].name_en
+        'Bangkok'
+    """
     return list(_provinces())
