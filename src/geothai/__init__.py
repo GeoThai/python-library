@@ -1,60 +1,11 @@
 """Every province, district, subdistrict and postal code of Thailand."""
 
 import json
-from dataclasses import dataclass
 from functools import cache
 from importlib.resources import files
-from typing import Literal
 
 from geothai._normalize import normalize
-
-
-@dataclass(frozen=True, slots=True)
-class Province:
-    """A province of Thailand."""
-
-    code: str
-    name_th: str
-    name_en: str
-
-
-@dataclass(frozen=True, slots=True)
-class District:
-    """A district (amphoe or khet) of Thailand."""
-
-    code: str
-    name_th: str
-    name_en: str
-    province_code: str
-
-
-@dataclass(frozen=True, slots=True)
-class Subdistrict:
-    """A subdistrict (tambon or khwaeng) of Thailand."""
-
-    code: str
-    name_th: str
-    name_en: str
-    district_code: str
-    province_code: str
-    postal_codes: tuple[str, ...]
-
-
-@dataclass(frozen=True, slots=True)
-class Address:
-    """A subdistrict together with the district and province it is in."""
-
-    province: Province
-    district: District
-    subdistrict: Subdistrict
-
-
-@dataclass(frozen=True, slots=True)
-class SearchResult:
-    """One match from ``search()``. Check ``level`` to know which kind of area ``area`` is."""
-
-    level: Literal["province", "district", "subdistrict"]
-    area: Province | District | Subdistrict
+from geothai.types import Address, District, Province, SearchResult, Subdistrict
 
 
 def _rows(name: str) -> list[list[str]]:

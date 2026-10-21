@@ -1,9 +1,6 @@
 import pytest
 
 from geothai import (
-    District,
-    Province,
-    Subdistrict,
     address,
     by_postal_code,
     district,
@@ -14,6 +11,7 @@ from geothai import (
     subdistrict,
     subdistricts,
 )
+from geothai.types import District, Province, Subdistrict
 
 
 def test_provinces_lists_all_77_sorted_by_code() -> None:
