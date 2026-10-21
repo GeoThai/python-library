@@ -1,4 +1,13 @@
-from geothai import District, Province, district, districts, province, provinces
+from geothai import (
+    District,
+    Province,
+    Subdistrict,
+    district,
+    districts,
+    province,
+    provinces,
+    subdistricts,
+)
 
 
 def test_provinces_lists_all_77_sorted_by_code() -> None:
@@ -37,3 +46,22 @@ def test_district_finds_one_by_code() -> None:
     )
     assert district("84") is None
     assert district("9999") is None
+
+
+def test_subdistricts_lists_the_subdistricts_of_a_district() -> None:
+    found = subdistricts("8405")
+    assert [s.code for s in found] == ["840501", "840502", "840503"]
+    assert found[0] == Subdistrict(
+        code="840501",
+        name_th="เกาะพะงัน",
+        name_en="Ko Pha-ngan",
+        district_code="8405",
+        province_code="84",
+        postal_codes=("84280",),
+    )
+    assert subdistricts("9999") == []
+
+
+def test_every_district_has_subdistricts_7436_in_all() -> None:
+    every = [s for p in provinces() for d in districts(p.code) for s in subdistricts(d.code)]
+    assert len(every) == 7436

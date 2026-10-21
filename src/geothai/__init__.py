@@ -25,6 +25,18 @@ class District:
     province_code: str
 
 
+@dataclass(frozen=True, slots=True)
+class Subdistrict:
+    """A subdistrict (tambon or khwaeng) of Thailand."""
+
+    code: str
+    name_th: str
+    name_en: str
+    district_code: str
+    province_code: str
+    postal_codes: tuple[str, ...]
+
+
 def _rows(name: str) -> list[list[str]]:
     text = files("geothai").joinpath(f"_data/{name}.json").read_text(encoding="utf-8")
     return json.loads(text)
@@ -58,6 +70,22 @@ def _districts_by_province() -> dict[str, tuple[District, ...]]:
 @cache
 def _district_by_code() -> dict[str, District]:
     return {d.code: d for d in _districts()}
+
+
+@cache
+def _subdistricts() -> tuple[Subdistrict, ...]:
+    return tuple(
+        Subdistrict(code, name_th, name_en, code[:4], code[:2], tuple(postal.split(" ")))
+        for code, name_th, name_en, postal in _rows("subdistricts")
+    )
+
+
+@cache
+def _subdistricts_by_district() -> dict[str, tuple[Subdistrict, ...]]:
+    grouped: dict[str, list[Subdistrict]] = {}
+    for s in _subdistricts():
+        grouped.setdefault(s.district_code, []).append(s)
+    return {k: tuple(v) for k, v in grouped.items()}
 
 
 def provinces() -> list[Province]:
@@ -121,3 +149,19 @@ def district(code: str) -> District | None:
         'เกาะพะงัน'
     """
     return _district_by_code().get(code)
+
+
+def subdistricts(district_code: str) -> list[Subdistrict]:
+    """Lists the subdistricts of a district, sorted by code.
+
+    Args:
+        district_code: Four-digit code of the district.
+
+    Returns:
+        A new list, empty if the district code is unknown.
+
+    Example:
+        >>> [s.name_en for s in subdistricts("8405")]
+        ['Ko Pha-ngan', 'Ban Tai', 'Ko Tao']
+    """
+    return list(_subdistricts_by_district().get(district_code, ()))
