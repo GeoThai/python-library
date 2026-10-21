@@ -61,6 +61,29 @@ class Subdistrict:
     """Thailand Post codes. More than one when the subdistrict spans post office zones"""
 
 
+@dataclass(frozen=True, slots=True)
+class Abolished:
+    """An area that DOPA abolished, with the date."""
+
+    code: str
+    """DOPA code"""
+
+    name_th: str
+    """Thai name"""
+
+    name_en: str | None
+    """English name, empty when DOPA gives none"""
+
+    level: Literal['province', 'district', 'subdistrict']
+    """Area level"""
+
+    parent_code: str | None
+    """Parent area, empty for a province"""
+
+    abolished_on: str
+    """Date the area was abolished"""
+
+
 ProvinceCode = Literal[
     "10",
     "11",

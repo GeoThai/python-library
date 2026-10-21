@@ -2,6 +2,7 @@
 
 import json
 import urllib.request
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -20,7 +21,7 @@ def get(path: str) -> list[dict[str, Any]]:
     return get_json(path)
 
 
-def write(name: str, rows: list[list[str]]) -> None:
+def write(name: str, rows: Sequence[Sequence[str | None]]) -> None:
     text = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
     (OUT / f"{name}.json").write_text(text + "\n", encoding="utf-8")
 
@@ -70,6 +71,12 @@ write(
     "subdistricts",
     [[s["code"], s["name_th"], s["name_en"], " ".join(s["postal_codes"])] for s in subdistricts],
 )
+abolished = get("json/abolished.json")
+for a in abolished:
+    if a["parent_code"] and not a["code"].startswith(a["parent_code"]):
+        raise ValueError(f"abolished {a['code']} is not under {a['parent_code']}")
+write("abolished", [[a["code"], a["name_th"], a["name_en"], a["abolished_on"]] for a in abolished])
+
 package = get_json("datapackage.json")
 if f"v{package['version']}" != VERSION:
     raise ValueError(f"datapackage.json says {package['version']}, data.version says {VERSION}")
@@ -89,6 +96,9 @@ if f"v{package['version']}" != VERSION:
                 "subdistricts",
                 "Subdistrict",
                 "A subdistrict (tambon or khwaeng) of Thailand.",
+            ),
+            dataclass_source(
+                package, "abolished", "Abolished", "An area that DOPA abolished, with the date."
             ),
             codes_source("ProvinceCode", provinces),
             codes_source("DistrictCode", districts),

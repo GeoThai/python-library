@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from geothai._schema import (
+    Abolished,
     District,
     DistrictCode,
     Province,
@@ -13,6 +14,7 @@ from geothai._schema import (
 )
 
 __all__ = [
+    "Abolished",
     "Address",
     "District",
     "DistrictCode",
