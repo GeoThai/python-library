@@ -3,6 +3,9 @@
 from dataclasses import dataclass
 from typing import Literal
 
+DATA_VERSION: str = "2026.10.20"
+"""The GeoThai/data release this package was built from, as YYYY.M.D."""
+
 
 @dataclass(frozen=True, slots=True)
 class Province:

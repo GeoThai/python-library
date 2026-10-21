@@ -1,6 +1,9 @@
+from pathlib import Path
+
 import pytest
 
 from geothai import (
+    DATA_VERSION,
     address,
     by_postal_code,
     district,
@@ -123,3 +126,8 @@ def test_search_ignores_the_word_for_the_level() -> None:
 def test_search_returns_nothing_for_an_empty_query_and_respects_the_limit() -> None:
     assert search("  ") == []
     assert len(search("a", limit=5)) == 5
+
+
+def test_data_version_matches_data_version_file() -> None:
+    root = Path(__file__).resolve().parent.parent
+    assert f"v{DATA_VERSION}" == (root / "data.version").read_text(encoding="utf-8").strip()

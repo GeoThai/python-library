@@ -5,7 +5,21 @@ from functools import cache
 from importlib.resources import files
 
 from geothai._normalize import normalize
+from geothai._schema import DATA_VERSION
 from geothai.types import Address, District, Province, SearchResult, Subdistrict
+
+__all__ = [
+    "DATA_VERSION",
+    "address",
+    "by_postal_code",
+    "district",
+    "districts",
+    "province",
+    "provinces",
+    "search",
+    "subdistrict",
+    "subdistricts",
+]
 
 
 def _rows(name: str) -> list[list[str]]:
