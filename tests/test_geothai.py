@@ -3,6 +3,7 @@ from geothai import (
     Province,
     Subdistrict,
     address,
+    by_postal_code,
     district,
     districts,
     province,
@@ -92,3 +93,9 @@ def test_address_gives_the_full_chain_of_a_subdistrict() -> None:
 def test_every_subdistrict_has_a_full_address() -> None:
     codes = [s.code for p in provinces() for d in districts(p.code) for s in subdistricts(d.code)]
     assert all(address(code) for code in codes)
+
+
+def test_by_postal_code_finds_every_subdistrict_that_uses_a_code() -> None:
+    assert [s.code for s in by_postal_code("84280")] == ["840501", "840502"]
+    assert "100608" in [s.code for s in by_postal_code("10250")]
+    assert by_postal_code("00000") == []

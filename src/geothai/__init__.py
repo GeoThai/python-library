@@ -102,6 +102,15 @@ def _subdistrict_by_code() -> dict[str, Subdistrict]:
     return {s.code: s for s in _subdistricts()}
 
 
+@cache
+def _subdistricts_by_postal() -> dict[str, tuple[Subdistrict, ...]]:
+    grouped: dict[str, list[Subdistrict]] = {}
+    for s in _subdistricts():
+        for code in s.postal_codes:
+            grouped.setdefault(code, []).append(s)
+    return {k: tuple(v) for k, v in grouped.items()}
+
+
 def provinces() -> list[Province]:
     """Lists every province, sorted by code.
 
@@ -219,3 +228,19 @@ def address(subdistrict_code: str) -> Address | None:
     if parent_district is None or parent_province is None:
         return None
     return Address(parent_province, parent_district, found)
+
+
+def by_postal_code(postal_code: str) -> list[Subdistrict]:
+    """Finds the subdistricts that use a postal code. One code can cover many subdistricts.
+
+    Args:
+        postal_code: Five-digit Thailand Post code, such as ``"84280"``.
+
+    Returns:
+        A new list sorted by subdistrict code, empty if no subdistrict uses the code.
+
+    Example:
+        >>> [s.name_en for s in by_postal_code("84280")]
+        ['Ko Pha-ngan', 'Ban Tai']
+    """
+    return list(_subdistricts_by_postal().get(postal_code, ()))
