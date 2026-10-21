@@ -2,6 +2,7 @@ from geothai import (
     District,
     Province,
     Subdistrict,
+    address,
     district,
     districts,
     province,
@@ -77,3 +78,17 @@ def test_subdistrict_finds_one_by_code() -> None:
     assert hua_mak.postal_codes == ("10240", "10250")
     assert subdistrict("8405") is None
     assert subdistrict("999999") is None
+
+
+def test_address_gives_the_full_chain_of_a_subdistrict() -> None:
+    found = address("840503")
+    assert found is not None
+    assert found.subdistrict.name_en == "Ko Tao"
+    assert found.district.name_en == "Ko Pha-ngan"
+    assert found.province.name_en == "Surat Thani"
+    assert address("8405") is None
+
+
+def test_every_subdistrict_has_a_full_address() -> None:
+    codes = [s.code for p in provinces() for d in districts(p.code) for s in subdistricts(d.code)]
+    assert all(address(code) for code in codes)

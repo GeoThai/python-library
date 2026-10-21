@@ -37,6 +37,15 @@ class Subdistrict:
     postal_codes: tuple[str, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class Address:
+    """A subdistrict together with the district and province it is in."""
+
+    province: Province
+    district: District
+    subdistrict: Subdistrict
+
+
 def _rows(name: str) -> list[list[str]]:
     text = files("geothai").joinpath(f"_data/{name}.json").read_text(encoding="utf-8")
     return json.loads(text)
@@ -186,3 +195,27 @@ def subdistrict(code: str) -> Subdistrict | None:
         ('84360',)
     """
     return _subdistrict_by_code().get(code)
+
+
+def address(subdistrict_code: str) -> Address | None:
+    """Gets a subdistrict with its district and province in one call.
+
+    Args:
+        subdistrict_code: Six-digit code of the subdistrict.
+
+    Returns:
+        The full address, or ``None`` if the subdistrict code is unknown.
+
+    Example:
+        >>> a = address("840503")
+        >>> f"{a.subdistrict.name_th} {a.district.name_th} {a.province.name_th}"
+        'เกาะเต่า เกาะพะงัน สุราษฎร์ธานี'
+    """
+    found = _subdistrict_by_code().get(subdistrict_code)
+    if found is None:
+        return None
+    parent_district = _district_by_code().get(found.district_code)
+    parent_province = _province_by_code().get(found.province_code)
+    if parent_district is None or parent_province is None:
+        return None
+    return Address(parent_province, parent_district, found)
