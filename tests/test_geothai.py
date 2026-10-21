@@ -1,4 +1,4 @@
-from geothai import District, Province, districts, province, provinces
+from geothai import District, Province, district, districts, province, provinces
 
 
 def test_provinces_lists_all_77_sorted_by_code() -> None:
@@ -29,3 +29,11 @@ def test_districts_lists_the_districts_of_a_province() -> None:
 
 def test_every_province_has_districts_928_in_all() -> None:
     assert sum(len(districts(p.code)) for p in provinces()) == 928
+
+
+def test_district_finds_one_by_code() -> None:
+    assert district("1001") == District(
+        code="1001", name_th="เขตพระนคร", name_en="Phra Nakhon", province_code="10"
+    )
+    assert district("84") is None
+    assert district("9999") is None

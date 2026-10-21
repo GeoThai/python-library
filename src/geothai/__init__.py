@@ -41,11 +41,23 @@ def _province_by_code() -> dict[str, Province]:
 
 
 @cache
+def _districts() -> tuple[District, ...]:
+    return tuple(
+        District(code, name_th, name_en, code[:2]) for code, name_th, name_en in _rows("districts")
+    )
+
+
+@cache
 def _districts_by_province() -> dict[str, tuple[District, ...]]:
     grouped: dict[str, list[District]] = {}
-    for code, name_th, name_en in _rows("districts"):
-        grouped.setdefault(code[:2], []).append(District(code, name_th, name_en, code[:2]))
+    for d in _districts():
+        grouped.setdefault(d.province_code, []).append(d)
     return {k: tuple(v) for k, v in grouped.items()}
+
+
+@cache
+def _district_by_code() -> dict[str, District]:
+    return {d.code: d for d in _districts()}
 
 
 def provinces() -> list[Province]:
@@ -93,3 +105,19 @@ def districts(province_code: str) -> list[District]:
         19
     """
     return list(_districts_by_province().get(province_code, ()))
+
+
+def district(code: str) -> District | None:
+    """Finds a district by its code.
+
+    Args:
+        code: Four-digit DOPA district code, such as ``"8405"``.
+
+    Returns:
+        The district, or ``None`` if no district has this code.
+
+    Example:
+        >>> district("8405").name_th
+        'เกาะพะงัน'
+    """
+    return _district_by_code().get(code)
