@@ -1,11 +1,29 @@
 [project]
 name = "geothai"
 version = "3.0.0"
+description = "Every province, district, subdistrict and postal code of Thailand, with types and search"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["thailand", "provinces", "districts", "subdistricts", "postal-code", "address"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: Thai",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Typing :: Typed",
+]
 authors = [
     { name = "Pongsakorn Thipayanate", email = "contact@fasu.dev" }
 ]
 requires-python = ">=3.11"
 dependencies = []
+
+[project.urls]
+Homepage = "https://geothai.fasu.dev"
+Repository = "https://github.com/GeoThai/python-library"
+Changelog = "https://geothai.fasu.dev/changelog/"
 
 [build-system]
 requires = ["uv_build>=0.13.4,<0.14.0"]
@@ -34,8 +52,8 @@ convention = "google"
 "scripts/**" = ["D", "ANN401"]
 
 [tool.pytest.ini_options]
-testpaths = ["src", "tests"]
-addopts = "--doctest-modules"
+testpaths = ["src", "tests", "README.md"]
+addopts = "--doctest-modules --doctest-glob=README.md"
 
 [tool.pyright]
 typeCheckingMode = "strict"
