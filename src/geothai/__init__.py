@@ -21,6 +21,11 @@ def _provinces() -> tuple[Province, ...]:
     return tuple(Province(code, name_th, name_en) for code, name_th, name_en in json.loads(text))
 
 
+@cache
+def _province_by_code() -> dict[str, Province]:
+    return {p.code: p for p in _provinces()}
+
+
 def provinces() -> list[Province]:
     """Lists every province, sorted by code.
 
@@ -32,3 +37,21 @@ def provinces() -> list[Province]:
         'Bangkok'
     """
     return list(_provinces())
+
+
+def province(code: str) -> Province | None:
+    """Finds a province by its code.
+
+    Args:
+        code: Two-digit DOPA province code, such as ``"84"``.
+
+    Returns:
+        The province, or ``None`` if no province has this code.
+
+    Example:
+        >>> province("84").name_en
+        'Surat Thani'
+        >>> province("99") is None
+        True
+    """
+    return _province_by_code().get(code)
