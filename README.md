@@ -114,6 +114,8 @@ The v2 code is on the [`archive`](https://github.com/GeoThai/python-library/tree
 
 ## Why?
 
+The data comes from [GeoThai/data](https://github.com/GeoThai/data). To see how it is built and checked, read [How it is built](https://github.com/GeoThai/data#how-it-is-built).
+
 Address forms in Thailand need the same four lists, and most copies of them are old: merged postal codes, abolished subdistricts, English names on the wrong area. This package ships the data that GeoThai checks against official sources, with types your editor can read.
 
 ## License
