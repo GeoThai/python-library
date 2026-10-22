@@ -4,6 +4,7 @@ import json
 from functools import cache
 from importlib.resources import files
 
+from geothai._areas import is_district, is_province
 from geothai._normalize import normalize
 from geothai._schema import DATA_VERSION
 from geothai.types import Address, District, Province, SearchResult, Subdistrict
@@ -272,23 +273,6 @@ def search(query: str, *, limit: int = 10) -> list[SearchResult]:
     return [*starts, *contains][:limit]
 
 
-_PROVINCE_ALIASES = {"กทม": "10", "กรุงเทพ": "10", "อยุธยา": "14", "ayutthaya": "14"}
-
-
-def _is_province(p: Province, name: str) -> bool:
-    return (
-        name in (normalize(p.name_th), normalize(p.name_en))
-        or _PROVINCE_ALIASES.get(name) == p.code
-    )
-
-
-# People write the capital district "อ.เมือง" without the province name. The capital is always XX01.
-def _is_district(d: District, name: str) -> bool:
-    if name in (normalize(d.name_th), normalize(d.name_en)):
-        return True
-    return d.code.endswith("01") and d.province_code != "10" and name in ("เมือง", "mueang")
-
-
 def match(
     subdistrict: str,
     *,
@@ -334,9 +318,9 @@ def match(
             continue
         if postal and postal not in s.postal_codes:
             continue
-        if province_name and not _is_province(a.province, province_name):
+        if province_name and not is_province(a.province, province_name):
             continue
-        if district_name and not _is_district(a.district, district_name):
+        if district_name and not is_district(a.district, district_name):
             continue
         found.append(a)
     return found
