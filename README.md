@@ -54,7 +54,7 @@ Province(code='84', name_th='สุราษฎร์ธานี', name_en='Sur
 | `address(subdistrict_code)`   | The subdistrict with its district and province, or `None`        |
 | `by_postal_code(postal_code)` | The subdistricts that use a postal code                          |
 | `search(query, *, limit=10)`  | Provinces, districts and subdistricts whose name has the query   |
-| `DATA_VERSION`                | The GeoThai/data release in this package, such as `'2026.10.20'` |
+| `DATA_VERSION`                | The GeoThai/data release in this package, such as `'2026.10.22'` |
 
 Every function takes codes as strings and returns a new list. The areas are frozen dataclasses, so you can use them as dictionary keys.
 
@@ -62,10 +62,17 @@ The areas that DOPA abolished have their own module:
 
 ```python
 >>> from geothai.abolished import abolished_areas
->>> next(a for a in abolished_areas() if a.code == "100205").abolished_on
-'2006-01-01'
+>>> bang_na = next(a for a in abolished_areas() if a.code == "104701")
+>>> bang_na.abolished_on
+'2022-04-22'
+>>> bang_na.successors
+('104702', '104703')
+>>> bang_na.successors_basis
+'notice'
 
 ```
+
+`successors` lists the codes that took an abolished area's place. `successors_basis` says how sure the link is: `"notice"` comes from a Royal Gazette notice, with the date and source in `successors_in_force` and `successors_source`. `"name"` is a match by Thai name for codes DOPA dropped in 2006, likely but not proven. When no successor is known, `successors` is empty.
 
 ## Types
 
