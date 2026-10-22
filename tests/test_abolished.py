@@ -1,5 +1,5 @@
 from geothai import district, subdistrict
-from geothai.abolished import abolished_areas
+from geothai.abolished import abolished_areas, match_abolished
 from geothai.types import Abolished
 
 
@@ -36,3 +36,17 @@ def test_abolished_areas_carry_their_successors_and_the_notice_behind_them() -> 
     assert len(with_successors) == 1182
     codes = [c for a in with_successors for c in a.successors or ()]
     assert [c for c in codes if not (district(c) if len(c) == 4 else subdistrict(c))] == []
+
+
+def test_match_abolished_finds_an_old_name() -> None:
+    found = match_abolished("แขวงบางนา", district="เขตบางนา", province="กทม")
+    assert [(a.code, a.successors) for a in found] == [("104701", ("104702", "104703"))]
+
+
+def test_match_abolished_follows_a_subdistrict_that_moved() -> None:
+    assert [a.code for a in match_abolished("ท่าแฝก", province="อุตรดิตถ์")] == ["530306"]
+
+
+def test_match_abolished_leaves_unknown_and_blank_names() -> None:
+    assert match_abolished("ไม่มีตำบลนี้") == []
+    assert match_abolished(" ") == []
