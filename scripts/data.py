@@ -21,7 +21,7 @@ def get(path: str) -> list[dict[str, Any]]:
     return get_json(path)
 
 
-def write(name: str, rows: Sequence[Sequence[str | None]]) -> None:
+def write(name: str, rows: Sequence[Sequence[str | int | None]]) -> None:
     text = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
     (OUT / f"{name}.json").write_text(text + "\n", encoding="utf-8")
 
@@ -75,7 +75,25 @@ abolished = get("json/abolished.json")
 for a in abolished:
     if a["parent_code"] and not a["code"].startswith(a["parent_code"]):
         raise ValueError(f"abolished {a['code']} is not under {a['parent_code']}")
-write("abolished", [[a["code"], a["name_th"], a["name_en"], a["abolished_on"]] for a in abolished])
+# A notice can cover many areas, so each source is written once and rows point to it.
+sources = list(dict.fromkeys(a["successors_source"] for a in abolished if a["successors_source"]))
+write(
+    "abolished",
+    [
+        [
+            a["code"],
+            a["name_th"],
+            a["name_en"],
+            a["abolished_on"],
+            " ".join(a["successors"]),
+            a["successors_basis"],
+            a["successors_in_force"],
+            None if a["successors_source"] is None else sources.index(a["successors_source"]),
+        ]
+        for a in abolished
+    ],
+)
+write("abolished-sources", sources)
 
 package = get_json("datapackage.json")
 if f"v{package['version']}" != VERSION:
