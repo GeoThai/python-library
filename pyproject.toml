@@ -1,6 +1,6 @@
 [project]
 name = "geothai"
-version = "3.0.1"
+version = "3.1.0"
 description = "Every province, district, subdistrict and postal code of Thailand, with types and search"
 readme = "README.md"
 license = "MIT AND CC-BY-4.0"
