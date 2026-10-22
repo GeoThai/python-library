@@ -14,6 +14,7 @@ __all__ = [
     "by_postal_code",
     "district",
     "districts",
+    "match",
     "province",
     "provinces",
     "search",
@@ -85,6 +86,15 @@ def _subdistricts_by_postal() -> dict[str, tuple[Subdistrict, ...]]:
         for code in s.postal_codes:
             grouped.setdefault(code, []).append(s)
     return {k: tuple(v) for k, v in grouped.items()}
+
+
+@cache
+def _subdistricts_by_name() -> dict[str, tuple[Subdistrict, ...]]:
+    grouped: dict[str, list[Subdistrict]] = {}
+    for s in _subdistricts():
+        for key in {normalize(s.name_th), normalize(s.name_en)}:
+            grouped.setdefault(key, []).append(s)
+    return {k: tuple(sorted(v, key=lambda s: s.code)) for k, v in grouped.items()}
 
 
 @cache
@@ -260,3 +270,73 @@ def search(query: str, *, limit: int = 10) -> list[SearchResult]:
         elif any(q in k for k in keys):
             contains.append(result)
     return [*starts, *contains][:limit]
+
+
+_PROVINCE_ALIASES = {"กทม": "10", "กรุงเทพ": "10", "อยุธยา": "14", "ayutthaya": "14"}
+
+
+def _is_province(p: Province, name: str) -> bool:
+    return (
+        name in (normalize(p.name_th), normalize(p.name_en))
+        or _PROVINCE_ALIASES.get(name) == p.code
+    )
+
+
+# People write the capital district "อ.เมือง" without the province name. The capital is always XX01.
+def _is_district(d: District, name: str) -> bool:
+    if name in (normalize(d.name_th), normalize(d.name_en)):
+        return True
+    return d.code.endswith("01") and d.province_code != "10" and name in ("เมือง", "mueang")
+
+
+def match(
+    subdistrict: str,
+    *,
+    district: str | None = None,
+    province: str | None = None,
+    postal_code: str | None = None,
+) -> list[Address]:
+    """Finds the subdistricts that fit an address written by hand, such as one from an old record.
+
+    Names must match in full, after the same clean-up as ``search()``. Short forms such as
+    "ต.", "อ." and "จ." are read, "เมือง" or "Mueang" is the capital district of the province,
+    and "กทม" is Bangkok. Each argument you give narrows the list. Empty arguments are ignored.
+
+    Args:
+        subdistrict: Subdistrict name, such as ``"ต.เกาะเต่า"`` or ``"Ko Tao"``.
+        district: District name.
+        province: Province name.
+        postal_code: Five-digit postal code.
+
+    Returns:
+        Every address that fits, sorted by subdistrict code. One result means the address is
+        clear. More than one means you need another argument. None means no current subdistrict
+        has this name: for an old name, check ``geothai.abolished``.
+
+    Example:
+        >>> len(match("วังทอง"))
+        9
+        >>> [a.subdistrict.code for a in match("วังทอง", province="จ.พิษณุโลก")]
+        ['650801']
+        >>> match("ต.ตลาด", district="อ.เมือง", province="สุราษฎร์ธานี")[0].subdistrict.code
+        '840101'
+    """
+    name = normalize(subdistrict)
+    district_name = normalize(district) if district else ""
+    province_name = normalize(province) if province else ""
+    postal = postal_code.strip() if postal_code else ""
+    if not name:
+        return []
+    found: list[Address] = []
+    for s in _subdistricts_by_name().get(name, ()):
+        a = address(s.code)
+        if a is None:
+            continue
+        if postal and postal not in s.postal_codes:
+            continue
+        if province_name and not _is_province(a.province, province_name):
+            continue
+        if district_name and not _is_district(a.district, district_name):
+            continue
+        found.append(a)
+    return found

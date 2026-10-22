@@ -19,3 +19,11 @@ def test_normalize_keeps_the_word_inside_a_name() -> None:
 
 def test_normalize_leaves_nothing_for_blank_text() -> None:
     assert normalize("  - ") == ""
+
+
+def test_normalize_drops_a_short_form_only_with_its_dot() -> None:
+    assert normalize("จ.สุราษฎร์ธานี") == "สุราษฎร์ธานี"
+    assert normalize(" อ. เกาะพะงัน") == "เกาะพะงัน"
+    assert normalize("ต.เกาะเต่า") == "เกาะเต่า"
+    assert normalize("อ่างทอง") == "อ่างทอง"
+    assert normalize("ตราด") == "ตราด"

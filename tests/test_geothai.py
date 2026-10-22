@@ -8,6 +8,7 @@ from geothai import (
     by_postal_code,
     district,
     districts,
+    match,
     province,
     provinces,
     search,
@@ -131,3 +132,27 @@ def test_search_returns_nothing_for_an_empty_query_and_respects_the_limit() -> N
 def test_data_version_matches_data_version_file() -> None:
     root = Path(__file__).resolve().parent.parent
     assert f"v{DATA_VERSION}" == (root / "data.version").read_text(encoding="utf-8").strip()
+
+
+def _codes(subdistrict: str, **kwargs: str) -> list[str]:
+    return [a.subdistrict.code for a in match(subdistrict, **kwargs)]
+
+
+def test_match_narrows_a_shared_name_by_province_district_and_postal_code() -> None:
+    assert len(_codes("วังทอง")) == 9
+    assert _codes("วังทอง", province="จ.พิษณุโลก") == ["650801"]
+    assert _codes("บางใหญ่", postal_code="11140") == ["120305"]
+    assert _codes("Ko Tao", district="Ko Pha-ngan") == ["840503"]
+
+
+def test_match_reads_the_forms_people_write() -> None:
+    assert _codes("แขวงสีลม", district="เขตบางรัก", province="กทม") == ["100402"]
+    assert _codes("ต.ตลาด", district="อ.เมือง", province="สุราษฎร์ธานี") == ["840101"]
+    assert _codes("Pratu Chai", district="Mueang", province="Ayutthaya") == ["140101"]
+    assert _codes("พระบรมมหาราชวัง", district="เมือง", province="กรุงเทพ") == []
+
+
+def test_match_ignores_empty_arguments_and_finds_nothing_for_part_of_a_name() -> None:
+    assert _codes("สีลม", district="", province=" ", postal_code="") == ["100402"]
+    assert _codes("สี") == []
+    assert _codes(" ") == []

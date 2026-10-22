@@ -24,7 +24,7 @@ The package needs Python 3.11 or later.
 ## Usage
 
 ```python
->>> from geothai import address, by_postal_code, districts, province, search, subdistricts
+>>> from geothai import address, by_postal_code, districts, match, province, search, subdistricts
 >>> province("84")
 Province(code='84', name_th='สุราษฎร์ธานี', name_en='Surat Thani')
 >>> len(districts("84"))
@@ -38,6 +38,8 @@ Province(code='84', name_th='สุราษฎร์ธานี', name_en='Sur
 'เกาะเต่า เกาะพะงัน สุราษฎร์ธานี'
 >>> [f"{r.level} {r.area.name_th}" for r in search("phangan")]
 ['district เกาะพะงัน', 'subdistrict เกาะพะงัน']
+>>> match("ต.ตลาด", district="อ.เมือง", province="สุราษฎร์ธานี")[0].subdistrict.code
+'840101'
 
 ```
 
@@ -54,9 +56,12 @@ Province(code='84', name_th='สุราษฎร์ธานี', name_en='Sur
 | `address(subdistrict_code)`   | The subdistrict with its district and province, or `None`        |
 | `by_postal_code(postal_code)` | The subdistricts that use a postal code                          |
 | `search(query, *, limit=10)`  | Provinces, districts and subdistricts whose name has the query   |
+| `match(subdistrict, *, district, province, postal_code)` | The addresses that fit a hand-written address |
 | `DATA_VERSION`                | The GeoThai/data release in this package, such as `'2026.10.22'` |
 
 Every function takes codes as strings and returns a new list. The areas are frozen dataclasses, so you can use them as dictionary keys.
+
+`match()` is for addresses typed by hand, such as old records or form input. It reads short forms such as `ต.`, `อ.` and `จ.`, the word `เมือง` for a capital district, and `กทม` for Bangkok. Names must match in full. One result means the address is clear. More than one means you need another argument: 795 subdistrict names are used more than once. None means no current subdistrict has the name.
 
 The areas that DOPA abolished have their own module:
 
