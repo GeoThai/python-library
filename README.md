@@ -57,7 +57,7 @@ Province(code='84', name_th='สุราษฎร์ธานี', name_en='Sur
 | `by_postal_code(postal_code)` | The subdistricts that use a postal code                          |
 | `search(query, *, limit=10)`  | Provinces, districts and subdistricts whose name has the query   |
 | `match(subdistrict, *, district, province, postal_code)` | The addresses that fit a hand-written address |
-| `DATA_VERSION`                | The GeoThai/data release in this package, such as `'2026.10.22'` |
+| `DATA_VERSION`                | The GeoThai/data release in this package, such as `'2026.10.23'` |
 
 Every function takes codes as strings and returns a new list. The areas are frozen dataclasses, so you can use them as dictionary keys.
 
@@ -88,6 +88,8 @@ For a name from an old record that `match()` does not find, `match_abolished()` 
 
 ```
 
+
+For map shapes on the same codes, use the GeoJSON files of [GeoThai/boundaries](https://github.com/GeoThai/boundaries).
 
 ## Types
 
